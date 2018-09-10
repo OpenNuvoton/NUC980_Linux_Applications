@@ -1,0 +1,258 @@
+netrt_rtnetlink.o: netrt_rtnetlink.c ../config.h \
+ /usr/local/arm_linux_4.8/usr/include/stdio.h \
+ /usr/local/arm_linux_4.8/usr/include/features.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/uClibc_config.h \
+ /usr/local/arm_linux_4.8/usr/include/sys/cdefs.h \
+ /usr/local/arm_linux_4.8/lib/gcc/arm-nuvoton-linux-uclibceabi/4.8.4/include/stddef.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/types.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/wordsize.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/typesizes.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/pthreadtypes.h \
+ /usr/local/arm_linux_4.8/usr/include/endian.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/endian.h \
+ /usr/local/arm_linux_4.8/usr/include/byteswap.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/byteswap.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/byteswap-common.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/uClibc_stdio.h \
+ /usr/local/arm_linux_4.8/usr/include/wchar.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/wchar.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/uClibc_mutex.h \
+ /usr/local/arm_linux_4.8/usr/include/pthread.h \
+ /usr/local/arm_linux_4.8/usr/include/sched.h \
+ /usr/local/arm_linux_4.8/usr/include/time.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/sched.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/time.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/uClibc_clk_tck.h \
+ /usr/local/arm_linux_4.8/usr/include/signal.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/sigset.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/setjmp.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/uClibc_pthread.h \
+ /usr/local/arm_linux_4.8/lib/gcc/arm-nuvoton-linux-uclibceabi/4.8.4/include/stdarg.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/stdio_lim.h \
+ /usr/local/arm_linux_4.8/usr/include/stdlib.h \
+ /usr/local/arm_linux_4.8/usr/include/sys/types.h \
+ /usr/local/arm_linux_4.8/usr/include/sys/select.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/select.h \
+ /usr/local/arm_linux_4.8/usr/include/sys/sysmacros.h \
+ /usr/local/arm_linux_4.8/usr/include/alloca.h \
+ /usr/local/arm_linux_4.8/usr/include/string.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/sockaddr.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm/types.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/types.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/int-ll64.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm/bitsperlong.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/bitsperlong.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/rtnetlink.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/types.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/posix_types.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/stddef.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm/posix_types.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/posix_types.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/netlink.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/kernel.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/sysinfo.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/socket.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/if_link.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/if_addr.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/neighbour.h \
+ /usr/local/arm_linux_4.8/usr/include/netinet/in.h \
+ /usr/local/arm_linux_4.8/lib/gcc/arm-nuvoton-linux-uclibceabi/4.8.4/include/stdint.h \
+ /usr/local/arm_linux_4.8/usr/include/stdint.h \
+ /usr/local/arm_linux_4.8/usr/include/sys/socket.h \
+ /usr/local/arm_linux_4.8/usr/include/sys/uio.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/uio.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/socket.h \
+ /usr/local/arm_linux_4.8/lib/gcc/arm-nuvoton-linux-uclibceabi/4.8.4/include-fixed/limits.h \
+ /usr/local/arm_linux_4.8/lib/gcc/arm-nuvoton-linux-uclibceabi/4.8.4/include-fixed/syslimits.h \
+ /usr/local/arm_linux_4.8/usr/include/limits.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/posix1_lim.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/local_lim.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/limits.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/uClibc_local_lim.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/posix2_lim.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/socket_type.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm/socket.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/socket.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm/sockios.h \
+ /usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/sockios.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/in.h \
+ /usr/local/arm_linux_4.8/usr/include/net/if.h \
+ /usr/local/arm_linux_4.8/usr/include/netdb.h \
+ /usr/local/arm_linux_4.8/usr/include/rpc/netdb.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/netdb.h \
+ /usr/local/arm_linux_4.8/usr/include/unistd.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/posix_opt.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/confname.h \
+ /usr/local/arm_linux_4.8/usr/include/bits/getopt.h
+
+../config.h:
+
+/usr/local/arm_linux_4.8/usr/include/stdio.h:
+
+/usr/local/arm_linux_4.8/usr/include/features.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/uClibc_config.h:
+
+/usr/local/arm_linux_4.8/usr/include/sys/cdefs.h:
+
+/usr/local/arm_linux_4.8/lib/gcc/arm-nuvoton-linux-uclibceabi/4.8.4/include/stddef.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/types.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/wordsize.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/typesizes.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/pthreadtypes.h:
+
+/usr/local/arm_linux_4.8/usr/include/endian.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/endian.h:
+
+/usr/local/arm_linux_4.8/usr/include/byteswap.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/byteswap.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/byteswap-common.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/uClibc_stdio.h:
+
+/usr/local/arm_linux_4.8/usr/include/wchar.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/wchar.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/uClibc_mutex.h:
+
+/usr/local/arm_linux_4.8/usr/include/pthread.h:
+
+/usr/local/arm_linux_4.8/usr/include/sched.h:
+
+/usr/local/arm_linux_4.8/usr/include/time.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/sched.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/time.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/uClibc_clk_tck.h:
+
+/usr/local/arm_linux_4.8/usr/include/signal.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/sigset.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/setjmp.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/uClibc_pthread.h:
+
+/usr/local/arm_linux_4.8/lib/gcc/arm-nuvoton-linux-uclibceabi/4.8.4/include/stdarg.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/stdio_lim.h:
+
+/usr/local/arm_linux_4.8/usr/include/stdlib.h:
+
+/usr/local/arm_linux_4.8/usr/include/sys/types.h:
+
+/usr/local/arm_linux_4.8/usr/include/sys/select.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/select.h:
+
+/usr/local/arm_linux_4.8/usr/include/sys/sysmacros.h:
+
+/usr/local/arm_linux_4.8/usr/include/alloca.h:
+
+/usr/local/arm_linux_4.8/usr/include/string.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/sockaddr.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm/types.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/types.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/int-ll64.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm/bitsperlong.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/bitsperlong.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/rtnetlink.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/types.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/posix_types.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/stddef.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm/posix_types.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/posix_types.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/netlink.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/kernel.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/sysinfo.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/socket.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/if_link.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/if_addr.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/neighbour.h:
+
+/usr/local/arm_linux_4.8/usr/include/netinet/in.h:
+
+/usr/local/arm_linux_4.8/lib/gcc/arm-nuvoton-linux-uclibceabi/4.8.4/include/stdint.h:
+
+/usr/local/arm_linux_4.8/usr/include/stdint.h:
+
+/usr/local/arm_linux_4.8/usr/include/sys/socket.h:
+
+/usr/local/arm_linux_4.8/usr/include/sys/uio.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/uio.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/socket.h:
+
+/usr/local/arm_linux_4.8/lib/gcc/arm-nuvoton-linux-uclibceabi/4.8.4/include-fixed/limits.h:
+
+/usr/local/arm_linux_4.8/lib/gcc/arm-nuvoton-linux-uclibceabi/4.8.4/include-fixed/syslimits.h:
+
+/usr/local/arm_linux_4.8/usr/include/limits.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/posix1_lim.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/local_lim.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/linux/limits.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/uClibc_local_lim.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/posix2_lim.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/socket_type.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm/socket.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/socket.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm/sockios.h:
+
+/usr/local/arm_linux_4.8/arm-nuvoton-linux-uclibceabi/include/asm-generic/sockios.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/in.h:
+
+/usr/local/arm_linux_4.8/usr/include/net/if.h:
+
+/usr/local/arm_linux_4.8/usr/include/netdb.h:
+
+/usr/local/arm_linux_4.8/usr/include/rpc/netdb.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/netdb.h:
+
+/usr/local/arm_linux_4.8/usr/include/unistd.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/posix_opt.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/confname.h:
+
+/usr/local/arm_linux_4.8/usr/include/bits/getopt.h:

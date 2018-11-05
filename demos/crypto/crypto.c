@@ -24,7 +24,7 @@
 #define SOL_ALG     279
 #endif
 
-#define BUF_SIZE    16
+#define BUF_SIZE    512
 
 
 static void aes_crypt(__u8 *protocol, int encrypt, 
@@ -92,11 +92,11 @@ void  print_data(char *str, char *buff, int len)
 }
 
 
-void AES_demo(int use_mtp_key)
+void AES_demo(void)
 {
 	int i;
-	char out[BUF_SIZE] = {0};
-	char in[BUF_SIZE] = "Single block msg";
+	char out[BUF_SIZE];
+	char in[BUF_SIZE];
 	const char key[32] =  "\x06\xa9\x21\x40\x36\xb8\xa1\x5b"
 							"\x51\x2e\x03\xd5\x34\x12\x00\x06"
 						   "\x06\xa9\x21\x40\x36\xb8\xa1\x5b"
@@ -104,11 +104,11 @@ void AES_demo(int use_mtp_key)
 	char iv[16] = "\x3d\xaf\xba\x42\x9d\x9e\xb4\x30\xb4\x22\xda\x80\x2c\x9f\xac\x41";
 
 	printf("\n+---------------------------------------------------------------+\n");
-	if (use_mtp_key)
-	printf("|  AES-128 CBC mode encrypt/descrpt demo (use MTP key)          |\n");
-	else
-	printf("|  AES-256 CBC mode encrypt/descrpt demo                        |\n");
+	printf("|  [AF_ALG] AES-256 CBC mode encrypt/descrpt demo               |\n");
 	printf("+---------------------------------------------------------------+\n");
+	
+	for (i = 0; i < BUF_SIZE; i++)
+		in[i] = i & 0xff;
 
 	aes_crypt("cbc(aes)", 1, in, BUF_SIZE, out, key, iv);
 
@@ -141,9 +141,9 @@ int SHA_demo(int digest_size, int is_hmac)
 
 	printf("\n+---------------------------------------------------------------+\n");
 	if (is_hmac)
-		printf("|  HMAC-SHA-%d demo                                            |\n", digest_size);
+		printf("|  [AF_ALG] HMAC-SHA-%d demo                                   |\n", digest_size);
 	else    
-		printf("|  SHA-%d demo                                                 |\n", digest_size);
+		printf("|  [AF_ALG] SHA-%d demo                                        |\n", digest_size);
 	printf("+---------------------------------------------------------------+\n");
 
 	switch (digest_size)
@@ -218,10 +218,11 @@ int SHA_demo(int digest_size, int is_hmac)
 	close(tfmfd);
 }
 
+extern void crypto_raw_demo(void);
+
 int main(int argc, char **argv)
 {
-	AES_demo(0);
-	AES_demo(1);            // use MTP key
+	AES_demo();
 	SHA_demo(160, 0);       // SHA-1
 	SHA_demo(160, 1);       // HMAC-SHA-1
 	SHA_demo(224, 0);       // SHA-224
@@ -232,6 +233,8 @@ int main(int argc, char **argv)
 	SHA_demo(384, 1);       // HMAC-SHA-384
 	SHA_demo(512, 0);       // SHA-512
 	SHA_demo(512, 1);       // HMAC-SHA-512
+	
+	crypto_raw_demo();
 }
 
 

@@ -11,8 +11,8 @@ define make_eth2uart
 	done;
 
 	@for subdir in $(CGI_SUBDIRS) ; do \
-		( cd $$subdir && gcc uart.c -o uart.cgi; \
-		  gcc uart2.c -o uart2.cgi; \
+		( cd $$subdir && arm-linux-gcc uart.c -o uart.cgi; \
+		  arm-linux-gcc uart2.c -o uart2.cgi; \
 		)\
 	done;
 

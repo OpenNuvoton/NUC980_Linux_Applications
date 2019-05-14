@@ -26,6 +26,9 @@ void  *sha_current_context = NULL;
 
 int Nuvoton_Init_SHA(void)
 {
+	if (fd_sha >= 0)
+		return 0;
+	
 	fd_sha = open(NVT_SHA, O_RDWR);
 	if (fd_sha < 0) 
 	{
@@ -47,6 +50,9 @@ void Nuvoton_Deinit_SHA(void)
 
 static int init(EVP_MD_CTX *ctx)
 {
+	if (fd_sha < 0)
+		Nuvoton_Init_SHA();
+	
 	if ((fd_sha >= 0) && (sha_current_context == NULL))
 	{
 		ioctl(fd_sha, SHA_IOC_INIT, NVT_SHA1 | NVT_SHA_INSWAP | NVT_SHA_OUTSWAP);
@@ -182,6 +188,9 @@ const EVP_MD *EVP_sha1(void)
 #ifdef USE_NUVOTON_SHA
 static int init224(EVP_MD_CTX *ctx)
 {
+	if (fd_sha < 0)
+		Nuvoton_Init_SHA();
+		
 	if ((fd_sha >= 0) && (sha_current_context == NULL))
 	{
 		ioctl(fd_sha, SHA_IOC_INIT, NVT_SHA224 | NVT_SHA_INSWAP | NVT_SHA_OUTSWAP);
@@ -218,6 +227,9 @@ static int final224(EVP_MD_CTX *ctx, unsigned char *md)
 
 static int init256(EVP_MD_CTX *ctx)
 {
+	if (fd_sha < 0)
+		Nuvoton_Init_SHA();
+
 	if ((fd_sha >= 0) && (sha_current_context == NULL))
 	{
 		ioctl(fd_sha, SHA_IOC_INIT, NVT_SHA256 | NVT_SHA_INSWAP | NVT_SHA_OUTSWAP);
@@ -337,6 +349,9 @@ static int init512_256(EVP_MD_CTX *ctx)
 #ifdef USE_NUVOTON_SHA
 static int init384(EVP_MD_CTX *ctx)
 {
+	if (fd_sha < 0)
+		Nuvoton_Init_SHA();
+
 	if ((fd_sha >= 0) && (sha_current_context == NULL))
 	{
 		ioctl(fd_sha, SHA_IOC_INIT, NVT_SHA384 | NVT_SHA_INSWAP | NVT_SHA_OUTSWAP);
@@ -373,6 +388,9 @@ static int final384(EVP_MD_CTX *ctx, unsigned char *md)
 
 static int init512(EVP_MD_CTX *ctx)
 {
+	if (fd_sha < 0)
+		Nuvoton_Init_SHA();
+
 	if ((fd_sha >= 0) && (sha_current_context == NULL))
 	{
 		ioctl(fd_sha, SHA_IOC_INIT, NVT_SHA512 | NVT_SHA_INSWAP | NVT_SHA_OUTSWAP);

@@ -56,6 +56,9 @@ unsigned long  aes_buff_size;
 
 int Nuvoton_Init_AES(void)
 {
+	if (fd_aes >= 0)
+		return 0;
+	
 	fd_aes = open(NVT_AES, O_RDWR);
 	if (fd_aes < 0) 
 	{

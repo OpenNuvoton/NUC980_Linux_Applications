@@ -394,8 +394,6 @@ static int test_builtin(void)
 
 int setup_tests(void)
 {
-	Nuvoton_Init_ECC();
-	
 #ifdef OPENSSL_NO_EC
     TEST_note("Elliptic curves are disabled.");
 #else

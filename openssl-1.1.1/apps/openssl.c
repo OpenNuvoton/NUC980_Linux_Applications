@@ -156,11 +156,6 @@ int main(int argc, char *argv[])
         return 1;
     }
     
-    Nuvoton_Init_AES();
-    Nuvoton_Init_SHA();
-	Nuvoton_Init_ECC();
-	Nuvoton_Init_RSA();
-
     if (!apps_startup()) {
         BIO_printf(bio_err,
                    "FATAL: Startup failure (dev note: apps_startup() failed)\n");
@@ -270,11 +265,6 @@ int main(int argc, char *argv[])
     if (CRYPTO_mem_leaks(bio_err) <= 0)
         ret = 1;
 #endif
-
-    Nuvoton_Deinit_AES();
-    Nuvoton_Deinit_SHA();
-	Nuvoton_Deinit_ECC();
-	Nuvoton_Deinit_RSA();
 
     BIO_free(bio_err);
     EXIT(ret);

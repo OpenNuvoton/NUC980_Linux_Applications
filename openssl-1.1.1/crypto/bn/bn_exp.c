@@ -301,6 +301,9 @@ sem_t  rsa_semaphore;
 
 int Nuvoton_Init_RSA(void)
 {
+	if (fd_rsa >= 0)
+		return 0;
+		
 	fd_rsa = open(NVT_RSA, O_RDWR);
 	if (fd_rsa < 0) 
 	{
@@ -1022,7 +1025,10 @@ int BN_mod_exp_mont(BIGNUM *rr, const BIGNUM *a, const BIGNUM *p,
     BN_MONT_CTX *mont = NULL;
 
 #ifdef USE_NUVOTON_RSA
-	if ((a->dmax <= 2048) && (p->dmax <= 2048) && (m->dmax <= 2048))
+	if (fd_rsa < 0)
+		Nuvoton_Init_RSA();
+
+	if ((fd_rsa >= 0) && (a->dmax <= 2048) && (p->dmax <= 2048) && (m->dmax <= 2048))
 	{
 		char   *tmpS;
 		char   strbuf[RSA_KBUF_HLEN];

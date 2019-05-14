@@ -22,6 +22,9 @@ void AES_cbc_encrypt(const unsigned char *in, unsigned char *out,
     size_t          dma_size;
     unsigned long   mode;
     
+    if (fd_aes < 0)
+    	Nuvoton_Init_AES();
+    
     dma_size = (size_t)(aes_buff_size / 2);
 
     mode = NVT_AES_INSWAP | NVT_AES_OUTSWAP | NVT_AES_CBC_MODE;

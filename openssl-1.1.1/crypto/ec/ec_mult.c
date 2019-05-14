@@ -77,6 +77,9 @@ int   fd_ecc = -1;
                                     
 int Nuvoton_Init_ECC(void)          
 {
+	if (fd_ecc >= 0)
+		return 0;
+	
 	fd_ecc = open(NVT_ECC, O_RDWR);
 	if (fd_ecc < 0) 
 	{
@@ -236,6 +239,9 @@ int ec_scalar_mul_ladder(const EC_GROUP *group, EC_POINT *r,
     BN_CTX_start(ctx);
 
 #ifdef USE_NUVOTON_ECC
+	if (fd_ecc < 0)
+		Nuvoton_Init_ECC();
+
 	p = point;
 	if (p == NULL)
    		p = group->generator;

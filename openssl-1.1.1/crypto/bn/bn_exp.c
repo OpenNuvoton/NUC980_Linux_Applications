@@ -1008,7 +1008,10 @@ static void RSA_Calculate_C(int length, char *rsa_N, char *rsa_C)
 	Binary2Hex(length, C, rsa_C);
 }
 
-static char   g_rsa_N[RSA_KBUF_HLEN] = { 0 };
+//static char   g_rsa_N[RSA_KBUF_HLEN] = { 0 };
+
+//debug
+static char   g_rsa_N[RSA_KBUF_HLEN*8] = { 0 };
 
 #endif
 
@@ -1028,7 +1031,7 @@ int BN_mod_exp_mont(BIGNUM *rr, const BIGNUM *a, const BIGNUM *p,
 	if (fd_rsa < 0)
 		Nuvoton_Init_RSA();
 
-	if ((fd_rsa >= 0) && (a->dmax <= 2048) && (p->dmax <= 2048) && (m->dmax <= 2048))
+	if ((fd_rsa >= 0) && (a->dmax <= 64) && (p->dmax <= 64) && (m->dmax <= 64))
 	{
 		char   *tmpS;
 		char   strbuf[RSA_KBUF_HLEN];

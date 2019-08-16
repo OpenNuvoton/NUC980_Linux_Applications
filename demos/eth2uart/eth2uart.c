@@ -673,7 +673,6 @@ void *tcp_process (void *arg)
     uint32_t i, r;
     struct Objects_Opt obj;
     struct sockaddr_in Client_addr;
-    struct timeval tcp_timeval;
     struct Links_Objects *p;
     socklen_t sin_size;
     fd_set net_fds;
@@ -706,9 +705,7 @@ void *tcp_process (void *arg)
 
         FD_SET(file_fd, &net_fds);
 
-        tcp_timeval.tv_sec   =  0 ;
-        tcp_timeval.tv_usec   = 0;
-        ret = select(tcp_max_fd +1,&net_fds,NULL,NULL,&tcp_timeval);
+        ret = select(tcp_max_fd +1,&net_fds,NULL,NULL,NULL);
 
         if (ret < 0)
         {

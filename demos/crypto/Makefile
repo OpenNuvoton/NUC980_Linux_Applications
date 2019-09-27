@@ -11,7 +11,6 @@ LIBS= -lc -lgcc -lc
 all: 
 	$(CC) -static $(SRCS) -o $(TARGET)
 	$(STRIP) $(TARGET)
-	cp ./crypto_demo ../../../rootfs/usr/bin
 	
 clean:
 	rm -f *.o 

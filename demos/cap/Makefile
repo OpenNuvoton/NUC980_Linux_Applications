@@ -10,7 +10,6 @@ LIBS= -lc -lgcc -lc -lpthread
 all: 
 	$(CC) -static $(SRCS) -o $(TARGET)
 	$(STRIP) $(TARGET) 
-	cp cap2bmp ../../../rootfs/
 clean:
 	rm -f *.o 
 	rm -f *.x 

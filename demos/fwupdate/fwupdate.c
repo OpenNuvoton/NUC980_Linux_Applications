@@ -88,7 +88,7 @@ static int mtd_open(const char *mtd, int flags)
     return -1;
 }
 
-static int nuwriter_pack_image_info_dump(void)
+static void nuwriter_pack_image_info_dump(void)
 {
     int i = 0;
 
@@ -108,7 +108,7 @@ static int nuwriter_pack_image_info_dump(void)
     }
 }
 
-static int fwupdate_mtd_info_user_dump(struct mtd_info_user *pmtdInfo)
+static void fwupdate_mtd_info_user_dump(struct mtd_info_user *pmtdInfo)
 {
     printf("WHOLE\n");
     printf("\ttype: %d \n", pmtdInfo->type);
@@ -149,7 +149,7 @@ static int nuwriter_pack_init(char *image_path)
 
         goto fail_nuwriter_pack_init;
     }
-    memset(g_psNuWriterPackChildFiles, 0, g_sNuWriterPackHdr.m_ui32FileNumber * sizeof(S_NUWRITER_PACK_CHILDFILE));
+    memset((void *)&g_psNuWriterPackChildFiles[0], 0, g_sNuWriterPackHdr.m_ui32FileNumber * sizeof(S_NUWRITER_PACK_CHILDFILE));
 
     /* Resource for children */
     g_psNuWriterPackChildFileOffset = malloc(g_sNuWriterPackHdr.m_ui32FileNumber * sizeof(int));
@@ -267,8 +267,11 @@ exit_mtd_erase:
 
 static int mtd_write(const char *mtd, unsigned int flash_offset, unsigned int file_offset, unsigned int len)
 {
-    int fd;
+    int fd = -1;
+    int ret = -1;
     char *buf = NULL;
+    int isNANDflash = (g_sWholeMtdInfo.oobsize > 0);
+    int i32WriteSize;
 
     if (!g_fpNuWriterPackImg)
         return -1;
@@ -276,27 +279,34 @@ static int mtd_write(const char *mtd, unsigned int flash_offset, unsigned int fi
     if (fseek(g_fpNuWriterPackImg, file_offset, SEEK_SET) != 0)
     {
         printf("Can't seek.(%d)\n", errno);
-        return -1;
+        goto exit_mtd_write;
     }
 
     fd = mtd_open(mtd, O_RDWR | O_SYNC);
     if (fd < 0)
     {
         fprintf(stderr, "Could not open mtd device\n");
-        return -1;
+        goto exit_mtd_write;
     }
 
     if (lseek(fd, flash_offset, SEEK_SET) != flash_offset)
     {
         printf("Can't lseek.(%d)\n", errno);
-        return -1;
+        goto exit_mtd_write;
     }
 
-    if ((buf = malloc(g_sWholeMtdInfo.erasesize)) == NULL)
+    if (isNANDflash)
+        i32WriteSize = g_sWholeMtdInfo.writesize;
+    else
+        i32WriteSize = g_sWholeMtdInfo.erasesize;
+
+    if ((buf = malloc(i32WriteSize)) == NULL)
     {
         printf("Can't malloc.(%d)\n", errno);
-        return -1;
+        goto exit_mtd_write;
     }
+
+    memset((void *)&buf[0], 0xff, i32WriteSize);
 
     while (len > 0)
     {
@@ -305,37 +315,49 @@ static int mtd_write(const char *mtd, unsigned int flash_offset, unsigned int fi
         size_t r;
 
         /* buffer may contain data already (from imghdr check) */
-        session_size = MIN(len, g_sWholeMtdInfo.erasesize);
+        session_size = MIN(len, i32WriteSize);
 
-        r = fread((unsigned char *)buf, session_size, 1, g_fpNuWriterPackImg) * session_size;
+        if (session_size != i32WriteSize)
+            memset((void *)&buf[0], 0xff, i32WriteSize);
+
+        r = fread((unsigned char *)&buf[0], session_size, 1, g_fpNuWriterPackImg) * session_size;
         len -= r;
 
         /* EOF */
         if (r == 0) break;
 
-        if ((result = write(fd, buf, r)) < r)
+        if ((result = write(fd, &buf[0], i32WriteSize)) < i32WriteSize)
         {
             if (result < 0)
             {
                 fprintf(stderr, "Error writing image.\n");
-                return -1;
+                goto exit_mtd_write;
             }
             else
             {
                 fprintf(stderr, "Insufficient space.\n");
-                return -1;
+                goto exit_mtd_write;
             }
         }
 
     }
 
-    close(fd);
-    return 0;
+    ret = 0;
+
+exit_mtd_write:
+
+    if (fd >= 0)
+        close(fd);
+
+    if (buf)
+        free(buf);
+
+    return ret;
 }
 
 static int find_whole_partition_entry(const char *mtd)
 {
-    memset(&g_sWholeMtdInfo, 0, sizeof(struct mtd_info_user));
+    memset((void *)&g_sWholeMtdInfo, 0, sizeof(struct mtd_info_user));
 
     if (mtd_check(mtd, &g_sWholeMtdInfo) < 0)
         return FALSE;
@@ -355,12 +377,18 @@ static int pack_child_program(const char *mtd, int idx)
         erase_size = g_psNuWriterPackChildFiles[idx].m_ui32FileLength;
 
     if (mtd_erase(mtd, g_psNuWriterPackChildFiles[idx].m_ui32FlashAddress, erase_size) < 0)
+    {
+        printf("[%s] failed to mtd_erase\n", __func__);
         return -1;
+    }
 
     if (mtd_write(mtd, g_psNuWriterPackChildFiles[idx].m_ui32FlashAddress,
                   g_psNuWriterPackChildFileOffset[idx],
                   g_psNuWriterPackChildFiles[idx].m_ui32FileLength) < 0)
+    {
+        printf("[%s] failed to mtd_write\n", __func__);
         return -1;
+    }
 
     return 0;
 }
@@ -368,22 +396,35 @@ static int pack_child_program(const char *mtd, int idx)
 static int nuwriter_pack_update(const char *mtd)
 {
     int i = 0;
+    int ret = 0;
 
     /* Data first */
     for (i = 0; i < g_sNuWriterPackHdr.m_ui32FileNumber; i++)
     {
         if (g_psNuWriterPackChildFiles[i].m_ui32ImageType < 1)
-            pack_child_program(mtd, i);
+        {
+            ret = pack_child_program(mtd, i);
+            if (ret != 0)
+                goto exit_nuwriter_pack_update;
+        }
     }
 
     /* env, boot */
     for (i = 0; i < g_sNuWriterPackHdr.m_ui32FileNumber; i++)
     {
         if (g_psNuWriterPackChildFiles[i].m_ui32ImageType > 0)
-            pack_child_program(mtd, i);
+        {
+            ret = pack_child_program(mtd, i);
+            if (ret != 0)
+                goto exit_nuwriter_pack_update;
+        }
     }
 
     return 0;
+
+exit_nuwriter_pack_update:
+
+    return -1;
 }
 
 static void help(void)
@@ -438,15 +479,20 @@ int main(int argc, char *argv[])
 
     /* Parse pack file. */
     if (nuwriter_pack_init(g_SZPackFileName) < 0)
+    {
+        printf("Failed to nuwriter_pack_init\n");
         return -1;
+    }
 
     /* Dump information */
     nuwriter_pack_image_info_dump();
 
     /* Check WHOLE partition is valid */
     if (!find_whole_partition_entry(g_SZWholePartitionName))
+    {
+        printf("Failed to find_whole_partition_entry\n");
         return -1;
-
+    }
     /* Dump information of WHOLE partition */
     fwupdate_mtd_info_user_dump(&g_sWholeMtdInfo);
 

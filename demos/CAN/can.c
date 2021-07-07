@@ -1301,18 +1301,124 @@ int can_get_device_stats(const char *name, struct can_device_stats *cds)
 	return get_link(name, GET_XSTATS, cds);
 }
 
+void can_write_test(int arg)
+{
+	int s = (int) arg;
+	struct can_frame frame;
+	int dlc = 8;
+	int i, rtr = 0, extended = 0;
+	ssize_t len;
+	int err;
+	struct pollfd fds[] = {
+		{
+ 			.fd = s,
+			.events = POLLOUT,
+		},
+	};
+
+	for(i = 0; i < dlc; i++) {
+		frame.data[i] = 0x31 + i;
+	}
+
+	frame.can_id = 0x100;
+	frame.can_dlc = dlc;
+
+	if (extended) {
+		frame.can_id &= CAN_EFF_MASK;
+		frame.can_id |= CAN_EFF_FLAG;
+	}
+	else
+		frame.can_id &= CAN_SFF_MASK;
+
+	if (rtr)
+		frame.can_id |= CAN_RTR_FLAG;
+
+	printf("\n CAN0 transfer id: %d", frame.can_id);
+	printf("\n CAN0 transfer dlc: %d", frame.can_dlc);
+	printf("\n CAN0 transfer Data:\n");
+	for (i = 0; i < frame.can_dlc; i++)
+		printf(" 0x%02x", frame.data[i]);
+	printf("\n");
+
+again:
+	while(1) {
+		err = poll(fds, 1, 1000);
+
+		if((err == -1) || (err == 0))
+			printf("\n poll write error = %d \n", err);
+		else
+			break;
+	}
+
+	/* send frame */
+	len = write(s, &frame, sizeof(frame));
+
+	usleep(500);
+
+	if(len != sizeof(frame))
+		printf("\n write error %d \n", errno);
+
+	if (len == -1) {
+		switch (errno) {
+			case ENOBUFS:
+				usleep(1000);
+				break;
+
+			case EINTR: /* fallthrough */
+				usleep(1000);
+				goto again;
+			default:
+				usleep(1000);
+				goto again;
+		}
+	}
+
+	printf("\n CAN0 transfer end !!!\n");
+}
+
+void can_read_test(int arg)
+{
+	int s = (int) arg;
+	struct can_frame Rx_frame;
+	fd_set readfds;
+	int i;
+	ssize_t nbytes;
+	int err;
+
+	struct pollfd fds[] = {
+		{
+			.fd	= s,
+			.events	= POLLIN,
+		},
+	};
+
+	while(1) {
+		err = poll(fds, 1, 10000);
+
+		if((err == -1) || (err == 0))
+			printf("\n poll read error =%d ", err);
+		else
+			break;
+	}
+
+	nbytes = read(s, &Rx_frame, sizeof(Rx_frame));
+
+	printf("\n CAN1 receive id = %d", Rx_frame.can_id);
+	printf("\n CAN1 receive dlc = %d", Rx_frame.can_dlc);
+	printf("\n CAN1 receive Data:\n");
+	for (i = 0; i < Rx_frame.can_dlc; i++)
+		printf(" 0x%02x", Rx_frame.data[i]);
+
+	printf("\n");
+}
+
 int main(int argc, char **argv)
 {
-	struct can_frame frame;
-	struct can_frame Rx_frame;
 	struct ifreq ifr;
 	struct sockaddr_can addr;
-	
 	int family = PF_CAN, type = SOCK_RAW, proto = CAN_RAW;
-	int dlc = 8;
-	int s[2], ret, i, rtr = 0, extended = 0;
+	int s[2];
 	int j;
-	int ret1;
 
 	can_set_bitrate("can0", 500000);
 	can_do_start("can0");
@@ -1329,7 +1435,7 @@ int main(int argc, char **argv)
 		{
 			strcpy(ifr.ifr_name, "can1");
 		}
-	
+
 		s[j] = socket(family, type, proto);
 		if (s[j] < 0)
 		{
@@ -1351,76 +1457,18 @@ int main(int argc, char **argv)
 			printf("ERROR");
 			return 1;
 		}
-		
-	}
-	
-	for(i = 0; i < dlc; i++)
-	{
-		frame.data[i] = 0x31 + i;
-		Rx_frame.data[i] = 0;
+
 	}
 
-	frame.can_id = 0x100;
-	frame.can_dlc = dlc;
+	can_write_test(s[0]);
+	can_read_test(s[1]);
 
-	if (extended)
-	{
-		frame.can_id &= CAN_EFF_MASK;
-		frame.can_id |= CAN_EFF_FLAG;
-	} 
-	else
-	{
-		frame.can_id &= CAN_SFF_MASK;
-	}
+	can_do_stop("can0");
+	can_do_stop("can1");
 
-	if (rtr)
-		frame.can_id |= CAN_RTR_FLAG;
-
-	printf("\n Please connect CAN0 and CAN1 to CAN bus\n");
-	
-	printf("\n CAN0 transfer id: %d", frame.can_id);
-	printf("\n CAN0 transfer dlc: %d", frame.can_dlc);
-	printf("\n CAN0 transfer Data:\n");
-	for (i = 0; i < frame.can_dlc; i++)
-		printf(" 0x%02x", frame.data[i]);
-	printf("\n");
-
-	ret1 = 0;
-	while(ret1 < sizeof(frame))
-	{
-		ret = write(s[0], &frame, sizeof(frame));
-		if (ret == -1)
-		{
-			printf("write error !! \n");
-		}
-
-		ret1 += ret;
-	}
-
-	ret1 = 0;
-	while(ret1 < sizeof(Rx_frame))
-	{
-		ret = read(s[1], &Rx_frame, sizeof(Rx_frame));
-		if (ret == -1)
-		{
-			printf("write error !! \n");
-		}
-		ret1 += ret;
-	}
-
-	printf("\n CAN1 receive id = %d", Rx_frame.can_id);
-	printf("\n CAN1 receive dlc = %d", Rx_frame.can_dlc);
-	printf("\n CAN1 receive Data:\n");
-	for (i = 0; i < frame.can_dlc; i++)
-		printf(" 0x%02x", Rx_frame.data[i]);
-
-	printf("\n");
-
-	can_do_stop("can0"); 
-        can_do_stop("can1");
-        
 	return 0;
 }
+
 
 
 

@@ -37,6 +37,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <errno.h>
+#include <poll.h>
 
 
 #include <net/if.h>

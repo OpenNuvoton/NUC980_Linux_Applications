@@ -12,6 +12,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <linux/rtc.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
@@ -22,10 +23,11 @@
 #include <math.h>
 #include <signal.h>
 
-#define RTC_TICK_ON      _IO('p', 0x03)  /* Update int. enable on        */
-#define RTC_TICK_OFF     _IO('p', 0x04)  /* ... off                      */
+#define RTC_TICK_ON       _IO('p', 0x03)  /* Update int. enable on        */
+#define RTC_TICK_OFF      _IO('p', 0x04)  /* ... off                      */
 #define RTC_TICK_SET      _IO('p', 0x05)  /* Periodic int. enable on      */
 #define RTC_TICK_READ     _IO('p', 0x06)  /* ... off                      */
+#define RTC_32K_CAL       _IOW('p', 0x22, unsigned long) /* 32K calibration value   */
 
 #define HR24 1
 int fd_all=0;
@@ -44,8 +46,9 @@ void tick_func()
 }
 void ctrl_c_signal (int sig)
 {
+        printf("/n/n **You have input 'ctrl+c',so must be input 'X' exit DEMO!\n\n");
+
         switch (sig) {
-                printf("/n/n **You have input 'ctrl+c',so must be input 'X' exit DEMO!\n\n");
         case SIGTERM:
 
         case SIGINT:
@@ -233,33 +236,31 @@ void setup_alarm(int fd,int sec,void(*func)())
 
 int main(void)
 {
-
         int i, fd, retval, irqcount = 0;
         unsigned long tmp, data;
         struct rtc_time rtc_tm;
         int scale_type = HR24;
         struct rtc_wkalrm rtc_alarmtm;
+        int freq_x100 = 3276800;   // 32.768 kHz * 100
         unsigned int select;
 
-        fd = open ("/dev/rtc", O_RDONLY);
+        fd = open ("/dev/rtc0", O_RDONLY);
         fd_all=fd;
         if (fd<0) {
                 printf("open rtc faild!!!\n");
-                return ;
+                return -1;
         }
         signal (SIGTERM, ctrl_c_signal); /* for the TERM signal.. */
         signal (SIGINT, ctrl_c_signal); /* for the CTRL+C signal.. */
-
-
 
         printf("\n******** RTC Test Demo ***********\n");
         printf("1.Read current RTC time ..\n");
         printf("2.Adjust current RTC time ..\n");
         printf("3.Test second alarm(hour,min,sec)..\n");
+        printf("4.Test 32K calibration..\n");
         printf("X.Exit(don't use 'ctrl+c',must be 'X')..\n");
         printf("**************************************\n");
         printf("Select : \n");
-
 
         while (1) {
 
@@ -276,6 +277,10 @@ int main(void)
 
                 case 0x33:
                         setup_alarm(fd,3,alarm_func);
+                        break;
+
+                case 0x34:
+                        ioctl(fd, RTC_32K_CAL, &freq_x100);
                         break;
 
                 case 0x58: //'x' -- exit the program
